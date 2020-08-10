@@ -81,21 +81,34 @@
     }
 
     id webView = [self findWebView];
-    if ([webView isKindOfClass:[UIWebView class]]) {
-        NSLog(@"Found UIWebView");
-        webViewDelegate = [[CDVRemoteInjectionUIWebViewDelegate alloc] init];
-        [webViewDelegate initializeDelegate:self];
-        
-        return;
-    } else if ([webView isKindOfClass:[WKWebView class]]) {
-        NSLog(@"Found WKWebView");
-        webViewDelegate = [[CDVRemoteInjectionWKWebViewDelegate alloc] init];
-        [webViewDelegate initializeDelegate:self];
-        
-        return;
-    } else {
-        NSLog(@"Not a supported web view implementation");
-    }
+    #if WK_WEB_VIEW_ONLY
+        if ([webView isKindOfClass:[WKWebView class]]) {
+            NSLog(@"Found WKWebView");
+            webViewDelegate = [[CDVRemoteInjectionWKWebViewDelegate alloc] init];
+            [webViewDelegate initializeDelegate:self];
+            
+            return;
+        } else {
+            NSLog(@"Not a supported web view implementation");
+        }
+    #else
+        if ([webView isKindOfClass:[UIWebView class]]) {
+            NSLog(@"Found UIWebView");
+            webViewDelegate = [[CDVRemoteInjectionUIWebViewDelegate alloc] init];
+            [webViewDelegate initializeDelegate:self];
+            
+            return;
+        } else if ([webView isKindOfClass:[WKWebView class]]) {
+            NSLog(@"Found WKWebView");
+            webViewDelegate = [[CDVRemoteInjectionWKWebViewDelegate alloc] init];
+            [webViewDelegate initializeDelegate:self];
+            
+            return;
+        } else {
+            NSLog(@"Not a supported web view implementation");
+        }
+    #endif
+
 }
 
 /*
